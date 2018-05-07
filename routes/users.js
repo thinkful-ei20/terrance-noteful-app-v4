@@ -6,6 +6,26 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 
 router.post('/', (req, res, next) => {
+
+  // Validation
+  const requiredFields = ['username', 'password'];
+  const missingField = requiredFields.find(field => !(field in req.body));
+
+  if (missingField) {
+    const err = new Error(`Missing '${missingField}' in request body`);
+    err.status = 422;
+    return next(err);
+  }
+
+  const stringFields = ['username', 'fullName', 'password'];
+  const notString = stringFields.find(field => typeof req.body[field] !== 'string');
+
+  if (notString) {
+    const err = new Error(`'${notString}' is not a string value`);
+    err.status = 422;
+    return next(err);
+  }
+
   const { username, password, fullName } = req.body;
 
   return User.hashPassword(password)
@@ -15,7 +35,6 @@ router.post('/', (req, res, next) => {
         password: digest,
         fullName
       };
-      console.log(newUser);
       return User.create(newUser);
     })
     .then(result => {
