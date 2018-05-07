@@ -6,24 +6,28 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 
 router.post('/', (req, res, next) => {
-  const {
-    fullname,
-    username,
-    password
-  } = req.body;
+  const { username, password, fullName } = req.body;
 
-  const user = {
-    fullname,
-    username,
-    password
-  };
-
-  User.create({user}, {new: true})
-    .then((result) => {
-      res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
+  return User.hashPassword(password)
+    .then(digest => {
+      const newUser = {
+        username,
+        password: digest,
+        fullName
+      };
+      console.log(newUser);
+      return User.create(newUser);
     })
-    .catch(err => next(err));
-
+    .then(result => {
+      return res.status(201).location(`/api/users/${result.id}`).json(result);
+    })
+    .catch(err => {
+      if (err.code === 11000) {
+        err = new Error('The username already exists');
+        err.status = 400;
+      }
+      next(err);
+    });
 });
 
 module.exports = router;
