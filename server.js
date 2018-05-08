@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -19,6 +20,7 @@ const app = express();
 
 const passport = require('passport');
 const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
 
 // Other statements removed for brevity
 const authRouter = require('./routes/auth');
@@ -36,6 +38,9 @@ app.use(express.json());
 
 // Utilize the strategy
 passport.use(localStrategy);
+
+// Utilize the jwt strategy
+passport.use(jwtStrategy);
 
 // Mount routers
 app.use('/api', authRouter);
