@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const tagSchema = mongoose.Schema({
   name: { type: String, required: true },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true},
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
 }, { timestamps: true });
 
 tagSchema.index({ name: 1, userId: 1}, { unique: true });

@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const Note = require('../models/note');
+const Tag = require('../models/tag');
+const Folder = require('../models/folder');
 
 // Protect endpoints using JWT Strategy
 router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
@@ -94,11 +96,22 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
+  if (Folder.find({_id: folderId}).userId !== userId) {
+    const err = new Error('The item is not valid');
+    err.status = 401;
+    return next(err);
+  }
+
   if (tags) {
     tags.forEach((tag) => {
       if (!mongoose.Types.ObjectId.isValid(tag)) {
         const err = new Error('The `id` is not valid');
         err.status = 400;
+        return next(err);
+      }
+      if (Tag.find({_id: tag}).userId !== userId) {
+        const err = new Error('The item is not valid');
+        err.status = 401;
         return next(err);
       }
     });
@@ -146,11 +159,22 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
+  if (Folder.find({_id: folderId}).userId !== userId) {
+    const err = new Error('The item is not valid');
+    err.status = 401;
+    return next(err);
+  }
+
   if (tags) {
     tags.forEach((tag) => {
       if (!mongoose.Types.ObjectId.isValid(tag)) {
         const err = new Error('The `tags.id` is not valid');
         err.status = 400;
+        return next(err);
+      }
+      if (Tag.find({_id: tag}).userId !== userId) {
+        const err = new Error('The item is not valid');
+        err.status = 401;
         return next(err);
       }
     });
