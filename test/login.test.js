@@ -15,6 +15,7 @@ chai.use(chaiHttp);
 
 describe.only('Noteful API - Login/Refresh', function () {
 
+  let token;
   let _id;
   const fullName = 'Example User';
   const username = 'exampleUser';
@@ -110,7 +111,7 @@ describe.only('Noteful API - Login/Refresh', function () {
 
     it('should return a valid auth token with a newer expiry date', function () {
       const user = { username, fullName };
-      const token = jwt.sign({ user }, JWT_SECRET, { subject: username, expiresIn: '1m' });
+      token = jwt.sign({ user }, JWT_SECRET, { subject: username, expiresIn: '1m' });
       const decoded = jwt.decode(token);
 
       return chai.request(app)
@@ -128,9 +129,37 @@ describe.only('Noteful API - Login/Refresh', function () {
         });
     });
 
-    it('should reject requests with no credentials');
-    it('should reject requests with an invalid token');
-    it('should reject requests with an expired token');
+    it('should reject requests with no credentials', function() {
+      return chai.request(app)
+        .post('/api/refresh')
+        .send({
+          username: '',
+          password: ''
+        })
+        .then((res) => {
+          expect(res).to.have.status(401);
+        });
+    });
+
+    it('should reject requests with an invalid token', function() {
+      token = jwt.sign({ username, password, fullName }, 'Incorrect Secret');
+      return chai.request(app)
+        .post('/api/refresh')
+        .set('Authorization', `Bearer ${token}`)
+        .then((res) => {
+          expect(res).to.have.status(401);
+        });
+    });
+
+    it('should reject requests with an expired token', function() {
+      token = jwt.sign({ username, password, fullName }, JWT_SECRET, { subject: username, expiresIn: Math.floor(Date.now() / 1000) - 10 });
+      return chai.request(app)
+        .post('/api/refresh')
+        .set('Authorization', `Bearer ${token}`)
+        .then(res => {
+          expect(res).to.have.status(401);
+        });
+    });
 
   });
   
