@@ -1,31 +1,31 @@
 [
   {
     "_id": "333333333333333333333300",
-    "fullname": "User Zero",
+    "fullName": "User Zero",
     "username": "user0",
     "password": "password"
   },
   {
     "_id": "333333333333333333333301",
-    "fullname": "User One",
+    "fullName": "User One",
     "username": "user1",
     "password": "password"
   },
   {
     "_id": "333333333333333333333302",
-    "fullname": "User Two",
+    "fullName": "User Two",
     "username": "user2",
     "password": "password"
   },
   {
     "_id": "111111111111111111111555",
-    "fullname": "terrance corley",
+    "fullName": "terrance corley",
     "username": "terrancecorley",
     "password": "password"
   },
   {
     "_id": "111111111111111111111666",
-    "fullname": "test test",
+    "fullName": "test test",
     "username": "test",
     "password": "testtest"
   }

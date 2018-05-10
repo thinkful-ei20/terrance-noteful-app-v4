@@ -15,6 +15,8 @@ router.post('/', (req, res, next) => {
   if (missingField) {
     const err = new Error(`Missing '${missingField}' in request body`);
     err.status = 422;
+    err.reason = 'ValidationError';
+    err.location = missingField;
     return next(err);
   }
 
@@ -24,6 +26,9 @@ router.post('/', (req, res, next) => {
   if (notString) {
     const err = new Error(`'${notString}' is not a string value`);
     err.status = 422;
+    err.message = 'Incorrect field type: expected string';
+    err.reason = 'ValidationError';
+    err.location = notString;
     return next(err);
   }
 
@@ -35,6 +40,9 @@ router.post('/', (req, res, next) => {
   if (nonTrimmedField) {
     const err = new Error(`Field: '${nonTrimmedField}' cannot start or end with whitespace`);
     err.status = 422;
+    err.message = 'Cannot start or end with whitespace';
+    err.reason = 'ValidationError';
+    err.location = nonTrimmedField;
     return next(err);
   }
 
@@ -52,6 +60,9 @@ router.post('/', (req, res, next) => {
     const min = sizedFields[tooSmallField].min;
     const err = new Error(`Field: '${tooSmallField}' must be at least ${min} characters long`);
     err.status = 422;
+    err.message = `${tooSmallField} must be at least ${min} character(s)`;
+    err.reason = 'ValidationError';
+    err.location = tooSmallField;
     return next(err);
   }
 
@@ -64,6 +75,9 @@ router.post('/', (req, res, next) => {
     const max = sizedFields[tooLargeField].max;
     const err = new Error(`Field: '${tooSmallField}' must be at most ${max} characters long`);
     err.status = 422;
+    err.message = 'password cannot be greater than 72 characters';
+    err.reason = 'ValidationError';
+    err.location = tooLargeField;
     return next(err);
   }
 
