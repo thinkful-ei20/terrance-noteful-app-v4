@@ -15,7 +15,7 @@ const seedUsers = require('../db/seed/users');
 
 chai.use(chaiHttp);
 
-describe.only('Noteful API - Users', function () {
+describe('Noteful API - Users', function () {
   const username = 'exampleUser';
   const password = 'examplePass';
   const fullName = 'Example User';
