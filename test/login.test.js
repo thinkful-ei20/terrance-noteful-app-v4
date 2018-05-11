@@ -13,7 +13,7 @@ const User = require('../models/user');
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-describe.only('Noteful API - Login/Refresh', function () {
+describe('Noteful API - Login/Refresh', function () {
 
   let token;
   let _id;

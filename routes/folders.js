@@ -31,13 +31,17 @@ router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   const userId = req.user.id;
 
+  console.log('line 34 ran' + id);
+  console.log(userId);
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.log('this ran');
     const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
 
-  Folder.findOne({ id, userId })
+  Folder.findOne({ _id: id, userId })
     .then(result => {
       if (result) {
         res.json(result);
