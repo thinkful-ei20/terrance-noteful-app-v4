@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
   const { searchTerm, folderId, tagId } = req.query;
   const userId = req.user.id;
 
-  let filter = {};
+  let filter = { userId };
 
   if (searchTerm) {
     // filter.title = { $regex: searchTerm };
@@ -33,9 +33,6 @@ router.get('/', (req, res, next) => {
     filter.tags = tagId;
   }
 
-  if (userId) {
-    filter.userId = userId;
-  }
 
   Note.find(filter)
     .populate('tags')
