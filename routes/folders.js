@@ -31,11 +31,7 @@ router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   const userId = req.user.id;
 
-  console.log('line 34 ran' + id);
-  console.log(userId);
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    console.log('this ran');
     const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
@@ -100,9 +96,9 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
-  const updateFolder = { name };
+  const updateFolder = { name, userId };
 
-  Folder.findOneAndUpdate({_id: id, userId}, updateFolder, { new: true })
+  Folder.findOneAndUpdate({_id: id}, updateFolder, { new: true })
     .then(result => {
       if (result) {
         res.json(result);
